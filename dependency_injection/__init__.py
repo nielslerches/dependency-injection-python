@@ -10,8 +10,8 @@ class DependencyContainer(ABC):
     def __init__(self, **kwargs):
         cls = self.get_type()
 
-        root_values = kwargs.copy()
-        root_values.update(self.get_defaults())
+        root_values = self.get_defaults()
+        root_values.update(kwargs.copy())
 
         root_type_hints = get_type_hints(cls)
         root_type_hints_inverted = {
@@ -77,4 +77,10 @@ class Config(DependencyContainer):
 
 
 config = Config()
+print(config.redis_client)
+
+config = Config(redis_uri="example.com:6379")
+print(config.redis_client)
+
+config = Config(redis_client=RedisClient(redis_uri="foobar.com:6379"))
 print(config.redis_client)
